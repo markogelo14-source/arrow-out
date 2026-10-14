@@ -20,6 +20,9 @@ enum Theme {
         Color(red: 0.235, green: 0.639, blue: 0.341),   // green
     ]
 
+    /// Spoken names for `pieceColors`, in the same order, for VoiceOver.
+    static let pieceColorNames = ["Indigo", "Coral", "Teal", "Amber", "Pink", "Green"]
+
     static func color(for piece: Piece) -> Color {
         pieceColors[piece.colorIndex % pieceColors.count]
     }

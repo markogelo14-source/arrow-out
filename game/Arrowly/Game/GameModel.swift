@@ -52,6 +52,20 @@ final class GameModel {
 
     var hintsUsed: Int { Self.maxHints - hintsLeft }
 
+    /// What VoiceOver reads for an arrow: "Coral arrow, 2 cells long, pointing up, tip at row 3,
+    /// column 4". It never says whether the arrow can escape; that is what hints are for.
+    func accessibilityDescription(of piece: Piece) -> String {
+        let color = Theme.pieceColorNames[piece.colorIndex % Theme.pieceColorNames.count]
+        let length = piece.length == 1 ? "1 cell" : "\(piece.length) cells long"
+        let direction = switch piece.direction {
+        case .up: "up"
+        case .right: "right"
+        case .down: "down"
+        case .left: "left"
+        }
+        return "\(color) arrow, \(length), pointing \(direction), tip at row \(piece.head.row + 1), column \(piece.head.col + 1)"
+    }
+
     func isLeaving(_ id: Int) -> Bool {
         leaving.contains { $0.id == id }
     }
@@ -95,9 +109,18 @@ final class GameModel {
         hintsLeft -= 1
         hintedID = piece.id
         Haptics.tap()
+        announce("Hint: \(accessibilityDescription(of: piece))")
     }
 
     // MARK: - Moves
+
+    private var reduceMotion: Bool { UIAccessibility.isReduceMotionEnabled }
+
+    /// Speaks a short update to VoiceOver users; does nothing otherwise.
+    private func announce(_ message: String) {
+        guard UIAccessibility.isVoiceOverRunning else { return }
+        AccessibilityNotification.Announcement(message).post()
+    }
 
     private func escape(_ piece: Piece, distance: Int) {
         let token = generation
@@ -105,14 +128,16 @@ final class GameModel {
         Haptics.tap()
         Sound.tap()
 
-        let travel = Double(distance + piece.length + 2)
-        withAnimation(.easeIn(duration: 0.32)) {
+        // With Reduce Motion the arrow fades out in place instead of sliding off.
+        let travel = reduceMotion ? 0 : Double(distance + piece.length + 2)
+        withAnimation(.easeIn(duration: reduceMotion ? 0.2 : 0.32)) {
             leaving.append(piece)
             offsets[piece.id] = travel
         }
 
         let cleared = board.isCleared
         if cleared { finishTime = Date().timeIntervalSince(startedAt) }
+        announce(cleared ? "Board cleared" : (piecesLeft == 1 ? "1 arrow left" : "\(piecesLeft) arrows left"))
         Task {
             try? await Task.sleep(for: .milliseconds(340))
             guard token == generation else { return }
@@ -134,11 +159,15 @@ final class GameModel {
         Sound.blocked()
 
         withAnimation(.easeOut(duration: 0.12)) {
-            offsets[piece.id] = Double(freeSteps) + 0.18
+            if !reduceMotion { offsets[piece.id] = Double(freeSteps) + 0.18 }
             flashingID = blockerID
         }
 
         let outOfHearts = hearts <= 0
+        if let blocker = board.piece(withID: blockerID) {
+            let left = outOfHearts ? "Out of hearts" : (hearts == 1 ? "1 heart left" : "\(hearts) hearts left")
+            announce("Blocked by \(Theme.pieceColorNames[blocker.colorIndex % Theme.pieceColorNames.count].lowercased()) arrow. \(left)")
+        }
         Task {
             try? await Task.sleep(for: .milliseconds(130))
             guard token == generation else { return }

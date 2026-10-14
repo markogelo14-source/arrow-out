@@ -25,14 +25,21 @@ struct BoardView: View {
                     // The tap target is the tile itself, so attach it before positioning.
                     .onTapGesture { model.tap(piece.id) }
                     .accessibilityElement()
-                    .accessibilityLabel("Arrow pointing \(name(of: piece.direction))")
+                    .accessibilityLabel(model.accessibilityDescription(of: piece))
+                    .accessibilityValue(model.hintedID == piece.id ? "Hint" : "")
                     .accessibilityAddTraits(.isButton)
+                    .accessibilityAction { model.tap(piece.id) }
+                    // Read the board top to bottom, left to right. The pieces' own order follows
+                    // how the board was built, which would give away the solution.
+                    .accessibilitySortPriority(readingPriority(of: piece))
+                    .accessibilityHidden(model.isLeaving(piece.id))
                     .opacity(model.isLeaving(piece.id) ? 0 : 1)
                     .position(center(of: piece, cell: cell))
                     .offset(offset(of: piece, cell: cell))
                 }
             }
             .frame(width: size.width, height: size.height)
+            .accessibilityElement(children: .contain)
             // A background never changes the layout size, so the grid stays centered.
             .background(
                 RoundedRectangle(cornerRadius: cell * 0.3, style: .continuous)
@@ -59,13 +66,10 @@ struct BoardView: View {
         )
     }
 
-    private func name(of direction: Direction) -> String {
-        switch direction {
-        case .up: return "up"
-        case .right: return "right"
-        case .down: return "down"
-        case .left: return "left"
-        }
+    private func readingPriority(of piece: Piece) -> Double {
+        let top = piece.cells.map(\.row).min()!
+        let left = piece.cells.map(\.col).min()!
+        return -Double(top * model.board.columns + left)
     }
 }
 
@@ -77,6 +81,7 @@ struct PieceView: View {
     let isFlashing: Bool
 
     @State private var pulse = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         let horizontal = piece.direction == .left || piece.direction == .right
@@ -98,6 +103,7 @@ struct PieceView: View {
                     .padding(inset * 0.2)
                     .scaleEffect(pulse ? 1.06 : 1)
                     .onAppear {
+                        guard !reduceMotion else { return }
                         withAnimation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true)) {
                             pulse = true
                         }
