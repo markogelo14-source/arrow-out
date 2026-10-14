@@ -86,17 +86,24 @@ struct StreakCard: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            ZStack {
-                Image(systemName: "flame.fill")
-                    .font(.system(size: 96))
-                    .foregroundStyle(Theme.coral)
-                Text("\(progress.currentStreak)")
-                    .font(.system(size: 34, weight: .heavy, design: .rounded))
-                    .foregroundStyle(.white)
-                    .offset(y: 12)
-                    .contentTransition(.numericText())
-            }
-            .accessibilityHidden(true)
+            Image(systemName: "flame.fill")
+                .font(.system(size: 96))
+                .foregroundStyle(Theme.coral)
+                .overlay(alignment: .bottomTrailing) {
+                    Text("\(progress.currentStreak)")
+                        .font(.system(size: 26, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Theme.coral)
+                        .contentTransition(.numericText())
+                        .frame(minWidth: 48, minHeight: 48)
+                        .padding(.horizontal, 4)
+                        .background(
+                            Capsule()
+                                .fill(.white)
+                                .overlay(Capsule().stroke(Theme.coral, lineWidth: 3))
+                        )
+                        .offset(x: 22, y: 8)
+                }
+                .accessibilityHidden(true)
 
             VStack(spacing: 4) {
                 Text(progress.currentStreak == 1 ? "1 day streak" : "\(progress.currentStreak) day streak")

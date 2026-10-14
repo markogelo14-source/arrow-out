@@ -91,7 +91,7 @@ struct GameView: View {
                 Text(model.mode.title)
                     .font(.system(.title2, design: .rounded).weight(.heavy))
                     .foregroundStyle(Theme.ink)
-                Text("\(model.piecesLeft) arrows left")
+                Text(model.piecesLeft == 1 ? "1 arrow left" : "\(model.piecesLeft) arrows left")
                     .font(.system(.footnote, design: .rounded))
                     .foregroundStyle(Theme.secondaryInk)
                     .contentTransition(.numericText())
