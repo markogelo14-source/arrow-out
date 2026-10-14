@@ -12,8 +12,8 @@ struct LevelMapView: View {
     private let swing: [CGFloat] = [0, 56, 84, 56, 0, -56, -84, -56]
 
     var body: some View {
-        ZStack(alignment: .top) {
-            Theme.background.ignoresSafeArea()
+        VStack(spacing: 0) {
+            header
 
             ScrollViewReader { proxy in
                 ScrollView {
@@ -22,7 +22,7 @@ struct LevelMapView: View {
                             chapterView(chapter)
                         }
                     }
-                    .padding(.top, 76)
+                    .padding(.top, 20)
                     .padding(.bottom, 40)
                     .frame(maxWidth: .infinity)
                     .background(MapDots())
@@ -31,9 +31,8 @@ struct LevelMapView: View {
                     proxy.scrollTo(progress.currentLevel, anchor: .center)
                 }
             }
-
-            header
         }
+        .background(Theme.background.ignoresSafeArea())
     }
 
     private var header: some View {
@@ -53,8 +52,8 @@ struct LevelMapView: View {
             .accessibilityLabel("Close")
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 10)
-        .background(Theme.background.opacity(0.94))
+        .padding(.top, 14)
+        .padding(.bottom, 6)
     }
 
     /// Every chapter up to the player's, plus one locked chapter to look forward to.
