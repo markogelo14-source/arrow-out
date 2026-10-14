@@ -8,15 +8,11 @@ struct BoardView: View {
         GeometryReader { geometry in
             let columns = CGFloat(model.board.columns)
             let rows = CGFloat(model.board.rows)
-            let cell = floor(min(geometry.size.width / columns, geometry.size.height / rows))
+            // Leave room for the background, which reaches 0.15 cell past the grid on each side.
+            let cell = floor(min(geometry.size.width / (columns + 0.3), geometry.size.height / (rows + 0.3)))
             let size = CGSize(width: cell * columns, height: cell * rows)
 
             ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: cell * 0.3, style: .continuous)
-                    .fill(Theme.board)
-                    .frame(width: size.width + cell * 0.3, height: size.height + cell * 0.3)
-                    .offset(x: -cell * 0.15, y: -cell * 0.15)
-
                 GridDots(columns: model.board.columns, rows: model.board.rows, cell: cell)
 
                 ForEach(model.visiblePieces) { piece in
@@ -37,6 +33,12 @@ struct BoardView: View {
                 }
             }
             .frame(width: size.width, height: size.height)
+            // A background never changes the layout size, so the grid stays centered.
+            .background(
+                RoundedRectangle(cornerRadius: cell * 0.3, style: .continuous)
+                    .fill(Theme.board)
+                    .padding(-cell * 0.15)
+            )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
