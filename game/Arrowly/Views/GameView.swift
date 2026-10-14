@@ -1,9 +1,11 @@
+import StoreKit
 import SwiftUI
 
 struct GameView: View {
     @State private var model: GameModel
     @Environment(PlayerProgress.self) private var progress
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
 
     init(mode: GameMode) {
         _model = State(initialValue: GameModel(mode: mode))
@@ -56,6 +58,13 @@ struct GameView: View {
             if phase == .won {
                 progress.recordWin(model.mode)
                 progress.hasSeenTutorial = true
+                if progress.takeReviewMoment(after: model.mode) {
+                    // Let the win card land first, so the prompt reads as part of the celebration.
+                    Task {
+                        try? await Task.sleep(for: .seconds(1.2))
+                        requestReview()
+                    }
+                }
             }
         }
     }

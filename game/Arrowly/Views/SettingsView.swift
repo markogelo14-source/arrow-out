@@ -26,6 +26,9 @@ struct SettingsView: View {
                     Link("Privacy Policy", destination: AppLinks.privacyPolicy)
                     Link("Terms of Use", destination: AppLinks.terms)
                     Link("Support", destination: AppLinks.support)
+                    if let writeReview = AppLinks.writeReview {
+                        Link("Rate Arrowly", destination: writeReview)
+                    }
                 }
 
                 Section {

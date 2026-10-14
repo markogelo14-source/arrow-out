@@ -30,4 +30,16 @@ enum AppLinks {
     static let privacyPolicy = URL(string: "https://markogelo14-source.github.io/arrow-out/privacy.html")!
     static let terms = URL(string: "https://markogelo14-source.github.io/arrow-out/terms.html")!
     static let support = URL(string: "https://markogelo14-source.github.io/arrow-out/support.html")!
+
+    /// The numeric App Store ID from App Store Connect (App Information > Apple ID), e.g. "6512345678".
+    /// Until it is set, the "Rate Arrowly" row and the link in the shared result stay hidden.
+    static let appStoreID: String? = nil
+
+    static var appStore: URL? {
+        appStoreID.flatMap { URL(string: "https://apps.apple.com/app/id\($0)") }
+    }
+
+    static var writeReview: URL? {
+        appStoreID.flatMap { URL(string: "https://apps.apple.com/app/id\($0)?action=write-review") }
+    }
 }
