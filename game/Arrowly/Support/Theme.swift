@@ -25,8 +25,9 @@ enum Theme {
     }
 }
 
-/// Links shown in Settings. Replace with the real pages once the website is live.
+/// Links shown in Settings, served from the website on GitHub Pages.
 enum AppLinks {
-    static let privacyPolicy = URL(string: "https://example.com/arrowly/privacy")!
-    static let support = URL(string: "https://example.com/arrowly/support")!
+    static let privacyPolicy = URL(string: "https://markogelo14-source.github.io/arrow-out/privacy.html")!
+    static let terms = URL(string: "https://markogelo14-source.github.io/arrow-out/terms.html")!
+    static let support = URL(string: "https://markogelo14-source.github.io/arrow-out/support.html")!
 }

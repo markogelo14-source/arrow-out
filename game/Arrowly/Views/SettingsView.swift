@@ -23,6 +23,7 @@ struct SettingsView: View {
                     Text("Arrowly does not collect any data. Your progress is stored only on this device.")
                         .font(.callout)
                     Link("Privacy Policy", destination: AppLinks.privacyPolicy)
+                    Link("Terms of Use", destination: AppLinks.terms)
                     Link("Support", destination: AppLinks.support)
                 }
 
