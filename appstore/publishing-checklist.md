@@ -32,6 +32,8 @@ Legend: **[You]** only Marko can do it (account, money, legal, signing). **[Clau
 12. **Orientation and devices:** portrait, iPhone only (`TARGETED_DEVICE_FAMILY = 1`; it still runs on iPads in iPhone mode). Only iPhone screenshots are needed.
 13. **No placeholder content, no debug menus, no "beta" wording, no broken buttons.** These are the most common rejections (Guideline 2.1 and 2.3).
 14. **Test on a real iPhone** and through **TestFlight** before submitting.
+   - Also check sound (tick, thud, chime; silent with the ringer off), the rating prompt after level 5, and a VoiceOver and Reduce Motion pass.
+14a. **Set Daily Puzzle #1 to the release day:** `DayKey.firstDaily` in `game/Arrowly/Model/GameMode.swift` (currently `2026-11-01`), so the first public puzzle shares as "Arrowly #1".
 
 ## Stage 2. App Store Connect setup
 
@@ -42,7 +44,9 @@ Legend: **[You]** only Marko can do it (account, money, legal, signing). **[Clau
 18. **Age rating:** answer the questionnaire using [age-rating-and-privacy.md](age-rating-and-privacy.md). Expected result: **4+**.
 19. **App Privacy:** paste the privacy policy URL and answer "Data Not Collected" (see the same file).
 20. **Pricing and availability:** Free, all countries (or leave out countries you do not want).
-21. **Screenshots:** upload the 6.9" iPhone set (3 to 10 images). Optional app preview video.
+21. **Screenshots:** upload the 6.9" iPhone set (3 to 10 images). Search results show only the first 1 to 3, so **screenshot 1 must show an arrow sliding off the board** (see research/what-makes-puzzle-games-popular.md).
+21a. **App preview video:** make one for launch, not later. It autoplays muted in search, so the first 3 seconds should show arrows sliding off. 15 to 30 seconds, recorded from the simulator or a device.
+21b. **[You] Featuring Nomination:** App Store Connect > Featuring > Nominations, 2 weeks to 3 months before release. Pitch the shared Daily Puzzle, no ads, "Data Not Collected", VoiceOver support and sound.
 22. **App Review information:** contact name, phone, email; sign-in not required; paste the review notes from [listing.md](listing.md).
 23. **Version release:** choose "Manually release this version" so you control launch day (lines up with the website and blog posts).
 
@@ -54,11 +58,14 @@ Legend: **[You]** only Marko can do it (account, money, legal, signing). **[Clau
 27. On the 1.0 version page, pick the build, then **Add for Review > Submit**.
 28. Review takes about 24 to 48 hours. If rejected, read the message in Resolution Center, fix, bump the build number, resubmit.
 29. When approved: press **Release**, publish the website and blog posts the same day, and update the website's App Store badge link with the real app URL (`https://apps.apple.com/app/id<APP_ID>`).
+29a. **Turn on the in-app links in the next build:** set `AppLinks.appStoreID` in `game/Arrowly/Support/Theme.swift` to the numeric Apple ID (App Store Connect > App Information). This shows the "Rate Arrowly" row in Settings and adds the App Store link to the shared Daily result.
 
 ## Stage 4. After launch
 
 30. Watch App Store Connect > Analytics and crash reports (Xcode Organizer) for the first week.
 31. Use **promotional text** (editable without a new build) for announcements.
+31a. **In-App Event:** set up a recurring "Weekend Challenge" event (App Store Connect > In-App Events, Challenge type). Events show in search and on the Today and Games tabs and need no new build.
+31b. **Next update:** translate the store listing and in-game text into 5 to 6 big markets (e.g. Spanish, Portuguese-BR, German, French, Japanese). Apple's editors weigh localization.
 32. Plan 1.1: ideas such as themes, ads or a "remove ads" purchase. Adding ads changes the privacy and age-rating answers; the alternate answers are already in [age-rating-and-privacy.md](age-rating-and-privacy.md).
 
 ---
