@@ -14,7 +14,7 @@ struct BoardProgressBar: View {
             }
         }
         .frame(height: 10)
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: value)
+        .animation(.easeOut(duration: 0.15), value: value)
         .accessibilityElement()
         .accessibilityLabel("Board \(Int((value * 100).rounded())) percent cleared")
     }
