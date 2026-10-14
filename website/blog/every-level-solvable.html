@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How we make sure every level can be solved · Arrowly</title>
+<meta name="description" content="Behind the scenes of Arrowly: how we generate arrow puzzle levels backwards so every single board is guaranteed to be solvable.">
+<meta property="og:title" content="How we make sure every level can be solved · Arrowly">
+<meta property="og:description" content="Behind the scenes of Arrowly: how we generate arrow puzzle levels backwards so every single board is guaranteed to be solvable.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e85a48'/><path d='M9 16h13m-5-6 6 6-6 6' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="brand-mark">➜</span>Arrowly</a>
+    <nav class="nav">
+      <a href="../index.html#how" class="hide-sm">How to play</a>
+      <a href="../blog/index.html" aria-current="page">Blog</a>
+      <a href="../support.html">Support</a>
+    </nav>
+  </div>
+</header>
+<main>
+
+<article class="prose"><div class="wrap narrow">
+<a class="back" href="index.html">← All posts</a>
+<p class="meta">Behind the scenes · 5 min read · October 2026</p>
+<h1>How we make sure every level can be solved</h1>
+
+<p>One of the worst feelings in a puzzle game is suspecting the puzzle is broken. If you can't clear a board, you should know it's because you haven't found the answer yet, not because there isn't one. So from day one, we set a rule for Arrowly: <strong>every board must be solvable, guaranteed.</strong></p>
+<p>Here's how we do it without hand-checking hundreds of levels.</p>
+
+<h2>Solving forwards is hard</h2>
+<p>The obvious approach is to scatter arrows on a grid at random, then run a solver to check whether the board can be cleared. That works, but it is wasteful: many random boards are dead ends, and you throw them away. It also makes it hard to control difficulty.</p>
+
+<h2>Building backwards is easy</h2>
+<p>Instead, we build every board in reverse. Picture the solution as a list of moves: the first arrow you remove, the second, and so on until the last. Now play that list backwards, starting from an empty grid:</p>
+<ol>
+<li>Start with an empty board.</li>
+<li>Pick an empty cell and a direction.</li>
+<li>Only place the arrow if its path to the edge is clear <em>right now</em>.</li>
+<li>Repeat until the board is as full as we want.</li>
+</ol>
+<p>Why does this guarantee a solution? Each arrow, at the moment we placed it, had a clear path past every arrow already on the board. Those earlier-placed arrows are exactly the ones that will still be on the board when this arrow is removed in the real game, because the game removes them in the opposite order. Arrows added later might sit in its path, but in the real game they are removed first. So removing the arrows in reverse order of placement always works.</p>
+
+<pre><code>for each new arrow:
+    pick empty cell + direction
+    if path to edge is empty:
+        place it
+# solution = arrows in reverse order of placement</code></pre>
+
+<h2>You can't get stuck either</h2>
+<p>There's a second, happy property of this game: removing an arrow never blocks anything. It only frees up space. So if a board is solvable at the start, it stays solvable no matter what order you try things in. Bumps cost a heart, but they never put the board into a state you can't solve.</p>
+
+<h2>Tuning difficulty</h2>
+<p>Since the generator always produces solvable boards, we can focus on making them interesting. A few levers we use:</p>
+<ul>
+<li><strong>Board size and density.</strong> Boards start at 4x4 and grow up to 8x10. More arrows on a bigger grid means longer chains of blockers.</li>
+<li><strong>Arrow length.</strong> Arrows can be up to 3 cells long. The same backwards trick works: a long arrow is only placed if the path in front of its head is clear.</li>
+<li><strong>Free arrows at the start.</strong> Boards with only one or two arrows that can leave immediately feel much harder than boards with many.</li>
+<li><strong>Chain length.</strong> The longest sequence of "this frees that" in a board is a good measure of how far ahead you need to think.</li>
+</ul>
+<p>We generate many candidate boards, score them on measures like these, and keep the ones that feel right for each stage of the game.</p>
+
+<h2>Try the generator yourself</h2>
+<p>The little playable board on our <a href="../index.html">home page</a> uses exactly this method. Hit "New board" as many times as you like: every one of them can be cleared.</p>
+
+</div></article>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Arrowly</span>
+    <nav><a href="../blog/index.html">Blog</a><a href="../support.html">Support</a><a href="../privacy.html">Privacy Policy</a></nav>
+  </div>
+</footer>
+</body>
+</html>

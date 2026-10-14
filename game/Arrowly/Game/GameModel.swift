@@ -1,0 +1,140 @@
+import SwiftUI
+import Observation
+
+/// Runs one board: taps, animations, hearts, hints and the win / lose result.
+@MainActor
+@Observable
+final class GameModel {
+    enum Phase: Equatable {
+        case playing, won, lost
+    }
+
+    static let maxHearts = 3
+    static let maxHints = 3
+
+    private(set) var mode: GameMode
+    private(set) var board: Board
+    private(set) var phase: Phase = .playing
+    private(set) var hearts = GameModel.maxHearts
+    private(set) var hintsLeft = GameModel.maxHints
+    private(set) var hintedID: Int?
+    private(set) var flashingID: Int?
+
+    /// Pieces that already left the board logically but are still flying off screen.
+    private(set) var leaving: [Piece] = []
+    /// How far each piece is drawn from its resting place, in cells along its direction.
+    private(set) var offsets: [Int: Double] = [:]
+    /// Pieces mid-bump, which ignore taps until they settle.
+    private var bumping: Set<Int> = []
+
+    private var generation = 0
+
+    init(mode: GameMode) {
+        self.mode = mode
+        board = LevelGenerator.generate(mode.spec)
+    }
+
+    /// Everything to draw: pieces on the board plus pieces flying away.
+    var visiblePieces: [Piece] { board.pieces + leaving }
+
+    var piecesLeft: Int { board.pieces.count }
+
+    func isLeaving(_ id: Int) -> Bool {
+        leaving.contains { $0.id == id }
+    }
+
+    func load(_ newMode: GameMode) {
+        mode = newMode
+        restart()
+    }
+
+    func restart() {
+        generation += 1
+        board = LevelGenerator.generate(mode.spec)
+        phase = .playing
+        hearts = Self.maxHearts
+        hintsLeft = Self.maxHints
+        hintedID = nil
+        flashingID = nil
+        leaving = []
+        offsets = [:]
+        bumping = []
+    }
+
+    func tap(_ id: Int) {
+        guard phase == .playing, !bumping.contains(id), let piece = board.piece(withID: id) else { return }
+        if hintedID == id { hintedID = nil }
+
+        switch board.result(for: piece) {
+        case .escapes(let distance):
+            escape(piece, distance: distance)
+        case .blocked(let blockerID, let freeSteps):
+            bump(piece, into: blockerID, freeSteps: freeSteps)
+        }
+    }
+
+    func useHint() {
+        guard phase == .playing, hintsLeft > 0, hintedID == nil else { return }
+        guard let piece = board.escapablePieces().randomElement() else { return }
+        hintsLeft -= 1
+        hintedID = piece.id
+        Haptics.tap()
+    }
+
+    // MARK: - Moves
+
+    private func escape(_ piece: Piece, distance: Int) {
+        let token = generation
+        board.remove(id: piece.id)
+        Haptics.tap()
+
+        let travel = Double(distance + piece.length + 2)
+        withAnimation(.easeIn(duration: 0.32)) {
+            leaving.append(piece)
+            offsets[piece.id] = travel
+        }
+
+        let cleared = board.isCleared
+        Task {
+            try? await Task.sleep(for: .milliseconds(340))
+            guard token == generation else { return }
+            leaving.removeAll { $0.id == piece.id }
+            offsets[piece.id] = nil
+            if cleared {
+                Haptics.win()
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) { phase = .won }
+            }
+        }
+    }
+
+    private func bump(_ piece: Piece, into blockerID: Int, freeSteps: Int) {
+        let token = generation
+        bumping.insert(piece.id)
+        hearts -= 1
+        Haptics.blocked()
+
+        withAnimation(.easeOut(duration: 0.12)) {
+            offsets[piece.id] = Double(freeSteps) + 0.18
+            flashingID = blockerID
+        }
+
+        let outOfHearts = hearts <= 0
+        Task {
+            try? await Task.sleep(for: .milliseconds(130))
+            guard token == generation else { return }
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.55)) {
+                offsets[piece.id] = 0
+            }
+            try? await Task.sleep(for: .milliseconds(320))
+            guard token == generation else { return }
+            bumping.remove(piece.id)
+            offsets[piece.id] = nil
+            withAnimation(.easeOut(duration: 0.2)) {
+                if flashingID == blockerID { flashingID = nil }
+            }
+            if outOfHearts {
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) { phase = .lost }
+            }
+        }
+    }
+}

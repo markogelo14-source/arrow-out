@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrowly: Tap-to-Escape Puzzle for iPhone</title>
+<meta name="description" content="Arrowly is a calm, clever puzzle for iPhone. Tap an arrow and it slides off the board, unless something is in the way. Clear the board one tap at a time. Free, no ads, for iPhone and iPad.">
+<meta property="og:title" content="Arrowly: Tap-to-Escape Puzzle">
+<meta property="og:description" content="Tap an arrow, watch it slide away. Clear the board one tap at a time.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e85a48'/><path d='M9 16h13m-5-6 6 6-6 6' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="brand-mark">➜</span>Arrowly</a>
+    <nav class="nav">
+      <a href="#how" class="hide-sm">How to play</a>
+      <a href="blog/index.html">Blog</a>
+      <a href="support.html">Support</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Coming soon to iPhone and iPad</span>
+        <h1>Tap an arrow.<br>Watch it slide away.</h1>
+        <p class="lede">A calm, clever puzzle where every board is a little knot to untangle. Find the right order and clear them all.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#" aria-disabled="true" title="App Store link coming at launch">
+            <span class="stack"><small>Coming soon on the</small>App Store</span>
+          </a>
+          <a class="btn btn-ghost" href="#how">How it works</a>
+        </div>
+      </div>
+
+      <div class="demo" aria-label="Playable demo board">
+        <div class="demo-top"><span>Try it right here</span><span><span id="demo-hearts" aria-label="Hearts left">❤️❤️❤️</span> · Arrows: <strong id="demo-left">0</strong></span></div>
+        <div class="board" id="board"></div>
+        <div class="demo-foot">
+          <span class="demo-msg" id="demo-msg" aria-live="polite"></span>
+          <button class="link-btn" id="demo-new" type="button">New board</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="how">
+    <div class="wrap">
+      <h2>How to play</h2>
+      <p style="color:var(--muted);max-width:52ch">The rules fit on a sticky note. The puzzles take a little longer.</p>
+      <ol class="steps">
+        <li><div><strong>Tap any arrow.</strong> It slides straight off the board in the direction it points.</div></li>
+        <li><div><strong>Mind the traffic.</strong> If another arrow is in its path, it bounces back and you lose a heart. You have three per board.</div></li>
+        <li><div><strong>Clear the board.</strong> Work out the right order and send every arrow home.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Why you'll like it</h2>
+      <div class="features">
+        <div class="card"><span class="icon">🧩</span><h3>Always solvable</h3><p>Every board is built backwards from an empty grid, so there is always a way out. No dead ends, no luck.</p></div>
+        <div class="card"><span class="icon">☕</span><h3>Made for short breaks</h3><p>Most boards take a minute or two. Play one on the bus, or twenty on the couch.</p></div>
+        <div class="card"><span class="icon">✈️</span><h3>Plays offline</h3><p>No account, no sign-up, no internet needed. Open it and play.</p></div>
+        <div class="card"><span class="icon">📈</span><h3>Gets cleverer</h3><p>Boards grow from 4x4 to 8x10, with long arrows that block several lanes. Endless levels, plus 3 hints per board when you're stuck.</p></div>
+        <div class="card"><span class="icon">🗓️</span><h3>Daily Puzzle</h3><p>One bigger board every day, the same one for every player.</p></div>
+        <div class="card"><span class="icon">🤫</span><h3>Respects your privacy</h3><p>We don't collect your personal data. <a href="privacy.html">Read the policy</a>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>From the blog</h2>
+      <div class="post-list">
+        <a class="post-card card" href="blog/how-to-play-arrowly.html"><div class="meta">Guide · 4 min read</div><h3>How to play Arrowly: the rules and 6 tips for any board</h3><p>Start from the edges, read the blockers, and stop guessing.</p></a>
+        <a class="post-card card" href="blog/why-arrow-puzzles-are-satisfying.html"><div class="meta">Design · 4 min read</div><h3>Why tap-to-escape puzzles feel so good</h3><p>Small rules, visible progress, and the quiet click of a plan coming together.</p></a>
+        <a class="post-card card" href="blog/every-level-solvable.html"><div class="meta">Behind the scenes · 5 min read</div><h3>How we make sure every level can be solved</h3><p>The trick is to build each board backwards.</p></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Arrowly</span>
+    <nav><a href="blog/index.html">Blog</a><a href="support.html">Support</a><a href="privacy.html">Privacy Policy</a></nav>
+  </div>
+</footer>
+<script src="assets/demo.js"></script>
+</body>
+</html>
