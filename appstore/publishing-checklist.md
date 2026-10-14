@@ -29,7 +29,7 @@ Legend: **[You]** only Marko can do it (account, money, legal, signing). **[Clau
    `NSPrivacyAccessedAPICategoryUserDefaults` with reason `CA92.1`, `NSPrivacyTracking = false`, no collected data types. Without it the upload is flagged.
 10. **App icon:** one 1024x1024 PNG in the asset catalog (see [screenshots-and-icon.md](screenshots-and-icon.md)).
 11. **Launch screen** set (a plain background color is fine).
-12. **Orientation and devices:** portrait, iPhone and iPad (as built). iPad support means a 13" iPad screenshot set is required too.
+12. **Orientation and devices:** portrait, iPhone only (`TARGETED_DEVICE_FAMILY = 1`; it still runs on iPads in iPhone mode). Only iPhone screenshots are needed.
 13. **No placeholder content, no debug menus, no "beta" wording, no broken buttons.** These are the most common rejections (Guideline 2.1 and 2.3).
 14. **Test on a real iPhone** and through **TestFlight** before submitting.
 
@@ -42,7 +42,7 @@ Legend: **[You]** only Marko can do it (account, money, legal, signing). **[Clau
 18. **Age rating:** answer the questionnaire using [age-rating-and-privacy.md](age-rating-and-privacy.md). Expected result: **4+**.
 19. **App Privacy:** paste the privacy policy URL and answer "Data Not Collected" (see the same file).
 20. **Pricing and availability:** Free, all countries (or leave out countries you do not want).
-21. **Screenshots:** upload the 6.9" iPhone set and the 13" iPad set (3 to 10 images each). Optional app preview video.
+21. **Screenshots:** upload the 6.9" iPhone set (3 to 10 images). Optional app preview video.
 22. **App Review information:** contact name, phone, email; sign-in not required; paste the review notes from [listing.md](listing.md).
 23. **Version release:** choose "Manually release this version" so you control launch day (lines up with the website and blog posts).
 

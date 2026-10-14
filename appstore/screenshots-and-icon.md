@@ -8,11 +8,11 @@ Checked Oct 14, 2026. Apple's reference: App Store Connect Help > Screenshot spe
 - Design brief: one bold arrow (or 2 to 3 interlocking arrows) using the game colors (indigo `#4F46E5`, coral `#F97362`, cream `#FFF8EE`), readable at 60 px. No screenshots, no words, no Apple hardware.
 - Keep the key shape inside the center ~80%; corners get clipped by the mask.
 
-## Screenshots: required sets (Arrowly runs on iPhone and iPad)
+## Screenshots: required set (Arrowly is iPhone only)
 - **6.9" iPhone display, portrait: 1320 x 2868 px** (also accepted: 1290 x 2796 or 1260 x 2736). Apple scales this set down to all smaller iPhones.
 - **3 to 10 images** (Apple's minimum is 1; 3 to 5 is the sweet spot). The first 3 show in search results, so they do most of the work.
 - PNG or JPEG, sRGB, **no alpha channel**, exact pixel size, each file under ~8 MB.
-- **13" iPad display, portrait: 2064 x 2752 px** (or 2048 x 2732), 3 to 10 images. Capture in the iPad Pro 13-inch (M4 or later) simulator. Same shot list, re-framed for the wider screen.
+- If iPad support is added later: a **13" iPad set at 2064 x 2752 px** (or 2048 x 2732) becomes required.
 
 ## How to capture
 1. Run the game in the **iPhone 17 Pro Max** simulator in Xcode 26 (its native resolution is 1320 x 2868).
