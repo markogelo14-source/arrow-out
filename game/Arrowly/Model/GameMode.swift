@@ -55,6 +55,18 @@ enum DayKey {
         return self.key(for: earlier)
     }
 
+    /// The day of Daily Puzzle #1. Set this to the App Store release day before submitting.
+    static let firstDaily = "2026-11-01"
+
+    /// The Daily Puzzle's number for sharing ("Arrowly #12"), counted from `firstDaily` as #1.
+    /// Nil for days before it, or if `key` is not a valid day.
+    static func puzzleNumber(for key: String) -> Int? {
+        guard let first = date(from: firstDaily), let day = date(from: key),
+              let days = Calendar.current.dateComponents([.day], from: first, to: day).day,
+              days >= 0 else { return nil }
+        return days + 1
+    }
+
     /// The last `count` days ending today, oldest first.
     static func recentDays(_ count: Int) -> [String] {
         (0..<count).reversed().compactMap { key($0, daysBefore: today) }

@@ -132,11 +132,22 @@ struct StreakCard: View {
         }
     }
 
+    /// A spoiler-free result, Wordle style:
+    /// Arrowly #12 🏹 / ⏱ 2:41  ❤️❤️🤍  💡1 / 🔥 5 day streak, plus the App Store link once it exists.
     private var shareText: String {
+        var title = "Arrowly"
+        if case .daily(let key) = model.mode, let number = DayKey.puzzleNumber(for: key) {
+            title += " #\(number)"
+        }
         let hearts = String(repeating: "❤️", count: model.hearts)
             + String(repeating: "🤍", count: GameModel.maxHearts - model.hearts)
-        let date = Date.now.formatted(.dateTime.month(.abbreviated).day())
-        return "Arrowly Daily Puzzle, \(date)\nSolved in \(formatTime(model.finishTime)) \(hearts)\n🔥 \(progress.currentStreak) day streak"
+        var lines = [
+            "\(title) 🏹",
+            "⏱ \(formatTime(model.finishTime))  \(hearts)  💡\(model.hintsUsed)",
+            progress.currentStreak == 1 ? "🔥 1 day streak" : "🔥 \(progress.currentStreak) day streak",
+        ]
+        if let link = AppLinks.appStore { lines.append(link.absoluteString) }
+        return lines.joined(separator: "\n")
     }
 }
 

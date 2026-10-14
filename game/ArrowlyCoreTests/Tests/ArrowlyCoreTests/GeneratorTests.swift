@@ -53,6 +53,14 @@ final class GeneratorTests: XCTestCase {
         }
     }
 
+    func testDailyPuzzleNumbers() {
+        XCTAssertEqual(DayKey.puzzleNumber(for: DayKey.firstDaily), 1)
+        XCTAssertEqual(DayKey.puzzleNumber(for: DayKey.key(-11, daysBefore: DayKey.firstDaily)!), 12)
+        XCTAssertEqual(DayKey.puzzleNumber(for: DayKey.key(-400, daysBefore: DayKey.firstDaily)!), 401)
+        XCTAssertNil(DayKey.puzzleNumber(for: DayKey.key(1, daysBefore: DayKey.firstDaily)!))
+        XCTAssertNil(DayKey.puzzleNumber(for: "not a day"))
+    }
+
     func testBlockedAndEscapingMoves() {
         // A points right into B; B points up and is free.
         let a = Piece(id: 0, head: Cell(col: 0, row: 1), direction: .right, length: 1, colorIndex: 0)

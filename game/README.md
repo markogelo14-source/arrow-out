@@ -22,7 +22,7 @@ A grid is filled with arrows. Tap an arrow and it slides off the board in the di
 - **Daily Puzzle:** one bigger board per day, the same for every player.
 - **Hints:** 3 per level; a hint highlights an arrow that can escape right now.
 - **Level map:** levels are grouped in chapters of 8 on a map; cleared levels can be replayed.
-- **Daily streak:** the home screen shows the last 7 Daily Puzzles, and solving one shows the streak with a Share button.
+- **Daily streak:** the home screen shows the last 7 Daily Puzzles, and solving one shows the streak with a Share button. The shared result is spoiler-free, Wordle style: `Arrowly #12 🏹`, time, hearts, hints used and the streak. Puzzle #1 is `DayKey.firstDaily` (set it to the release day).
 - **Win card:** hearts left, hints used and time, with arrow confetti. A progress bar in the game header fills as arrows leave.
 - Haptic feedback and soft sounds on every move (sounds are made in code, respect the silent switch and mix with music). Both can be switched off in Settings.
 
