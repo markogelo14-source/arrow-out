@@ -50,11 +50,11 @@ Notes: words already in the name and subtitle ("arrowly", "arrow", "escape", "pu
 First release. Thanks for playing! If you get stuck or find a bug, tell us from the support page.
 
 ## URLs
-- Support URL (required): `https://<site>/support.html`
-- Marketing URL (optional): `https://<site>/`
-- Privacy Policy URL (required): `https://<site>/privacy.html`
+- Support URL (required): `https://markogelo14-source.github.io/arrow-out/support.html`
+- Marketing URL (optional): `https://markogelo14-source.github.io/arrow-out/`
+- Privacy Policy URL (required): `https://markogelo14-source.github.io/arrow-out/privacy.html`
 
-`<site>` is the website's address once chosen (default plan: GitHub Pages, see website/URLS.md). Both required URLs must load before you submit.
+Hosted on GitHub Pages (turn on in repo Settings > Pages > Source: GitHub Actions). Both required URLs must load before you submit.
 
 ## Copyright
 `2026 <Your legal name>` (matches the seller name of an Individual developer account)

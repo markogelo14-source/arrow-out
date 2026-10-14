@@ -38,7 +38,7 @@ Note on "Made for Kids": do not opt into the Kids category. It brings stricter r
 
 ## App Privacy ("nutrition label", App Store Connect > App Privacy)
 
-1. Privacy Policy URL: `https://<site>/privacy.html` (from the website thread).
+1. Privacy Policy URL: `https://markogelo14-source.github.io/arrow-out/privacy.html` (from the website thread).
 2. "Do you or your third-party partners collect data from this app?" **No, we do not collect data from this app.**
 3. Result shown on the store: **Data Not Collected**.
 

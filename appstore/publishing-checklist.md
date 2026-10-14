@@ -65,4 +65,4 @@ Legend: **[You]** only Marko can do it (account, money, legal, signing). **[Clau
 
 ## What depends on other threads
 - **Game thread:** your own bundle ID, confirming nothing is stored besides UserDefaults, real gameplay for screenshots.
-- **Website thread:** privacy policy URL and support URL are `<site>/privacy.html` and `<site>/support.html` (website/URLS.md); the domain is not chosen yet. Both must be live before you submit; Apple checks them.
+- **Website thread:** privacy policy URL and support URL are `https://markogelo14-source.github.io/arrow-out/privacy.html` and `.../support.html` (website/URLS.md). They go live once GitHub Pages is turned on (repo Settings > Pages > Source: GitHub Actions). Both must be live before you submit; Apple checks them.
