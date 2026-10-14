@@ -31,6 +31,10 @@ final class PlayerProgress {
         didSet { defaults.set(hapticsEnabled, forKey: Haptics.enabledKey) }
     }
 
+    var soundEnabled: Bool {
+        didSet { defaults.set(soundEnabled, forKey: Sound.enabledKey) }
+    }
+
     var hasSeenTutorial: Bool {
         didSet { defaults.set(hasSeenTutorial, forKey: Keys.hasSeenTutorial) }
     }
@@ -49,6 +53,7 @@ final class PlayerProgress {
             dailySolvedDays = last.isEmpty ? [] : Set((0..<streak).compactMap { DayKey.key($0, daysBefore: last) })
         }
         hapticsEnabled = defaults.object(forKey: Haptics.enabledKey) as? Bool ?? true
+        soundEnabled = defaults.object(forKey: Sound.enabledKey) as? Bool ?? true
         hasSeenTutorial = defaults.bool(forKey: Keys.hasSeenTutorial)
     }
 

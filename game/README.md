@@ -24,7 +24,7 @@ A grid is filled with arrows. Tap an arrow and it slides off the board in the di
 - **Level map:** levels are grouped in chapters of 8 on a map; cleared levels can be replayed.
 - **Daily streak:** the home screen shows the last 7 Daily Puzzles, and solving one shows the streak with a Share button.
 - **Win card:** hearts left, hints used and time, with arrow confetti. A progress bar in the game header fills as arrows leave.
-- Haptic feedback on every move.
+- Haptic feedback and soft sounds on every move (sounds are made in code, respect the silent switch and mix with music). Both can be switched off in Settings.
 
 ## Short pitch
 Arrowly is a calm, one-thumb logic puzzle. Look at the board, find the arrow with a clear path, and tap it away. One wrong tap costs a heart, so think before you tap. Endless generated levels and a fresh Daily Puzzle every day.

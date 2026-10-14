@@ -103,6 +103,7 @@ final class GameModel {
         let token = generation
         board.remove(id: piece.id)
         Haptics.tap()
+        Sound.tap()
 
         let travel = Double(distance + piece.length + 2)
         withAnimation(.easeIn(duration: 0.32)) {
@@ -119,6 +120,7 @@ final class GameModel {
             offsets[piece.id] = nil
             if cleared {
                 Haptics.win()
+                Sound.win()
                 withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) { phase = .won }
             }
         }
@@ -129,6 +131,7 @@ final class GameModel {
         bumping.insert(piece.id)
         hearts -= 1
         Haptics.blocked()
+        Sound.blocked()
 
         withAnimation(.easeOut(duration: 0.12)) {
             offsets[piece.id] = Double(freeSteps) + 0.18

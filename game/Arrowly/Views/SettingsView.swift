@@ -11,6 +11,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
+                    Toggle("Sound", isOn: $progress.soundEnabled)
                     Toggle("Haptics", isOn: $progress.hapticsEnabled)
                 }
 
