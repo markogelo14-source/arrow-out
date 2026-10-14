@@ -39,9 +39,11 @@ struct GameView: View {
                 Color.black.opacity(0.25)
                     .ignoresSafeArea()
                     .transition(.opacity)
+                if model.phase == .won {
+                    ConfettiView()
+                }
                 ResultCard(
-                    phase: model.phase,
-                    mode: model.mode,
+                    model: model,
                     onNext: nextLevel,
                     onRetry: { model.restart() },
                     onHome: { dismiss() }
@@ -64,6 +66,14 @@ struct GameView: View {
     }
 
     private var header: some View {
+        VStack(spacing: 10) {
+            headerRow
+            BoardProgressBar(value: model.progress)
+                .padding(.horizontal, 8)
+        }
+    }
+
+    private var headerRow: some View {
         HStack {
             Button {
                 dismiss()
@@ -141,46 +151,59 @@ struct GameView: View {
 
 /// Shown over the board when a level is won or lost.
 struct ResultCard: View {
-    let phase: GameModel.Phase
-    let mode: GameMode
+    let model: GameModel
     let onNext: () -> Void
     let onRetry: () -> Void
     let onHome: () -> Void
 
     var body: some View {
-        VStack(spacing: 18) {
-            Image(systemName: phase == .won ? "star.fill" : "heart.slash.fill")
-                .font(.system(size: 52))
-                .foregroundStyle(phase == .won ? Color(red: 0.961, green: 0.651, blue: 0.137) : Theme.danger)
-                .symbolEffect(.bounce, value: phase)
+        Group {
+            if model.phase == .won, case .daily = model.mode {
+                StreakCard(model: model, onHome: onHome)
+            } else {
+                levelResult
+            }
+        }
+        .padding(28)
+        .frame(maxWidth: 360)
+        .background(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(Theme.background)
+                .shadow(color: .black.opacity(0.2), radius: 24, y: 10)
+        )
+        .padding(24)
+    }
 
-            Text(phase == .won ? "Board cleared!" : "Out of hearts")
+    private var won: Bool { model.phase == .won }
+
+    private var levelResult: some View {
+        VStack(spacing: 18) {
+            Image(systemName: won ? "star.fill" : "heart.slash.fill")
+                .font(.system(size: 52))
+                .foregroundStyle(won ? Theme.pieceColors[3] : Theme.danger)
+                .symbolEffect(.bounce, value: model.phase)
+
+            Text(won ? "Board cleared!" : "Out of hearts")
                 .font(.system(.title, design: .rounded).weight(.heavy))
                 .foregroundStyle(Theme.ink)
+
+            if won {
+                StatTiles(hearts: model.hearts, hintsUsed: model.hintsUsed, time: model.finishTime)
+            }
 
             Text(message)
                 .font(.system(.body, design: .rounded))
                 .foregroundStyle(Theme.secondaryInk)
                 .multilineTextAlignment(.center)
 
-            if phase == .won {
-                if case .level = mode {
-                    Button(action: onNext) {
-                        Text("Next level")
-                            .font(.system(.title3, design: .rounded).weight(.bold))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                    }
-                    .buttonStyle(ChunkyButtonStyle(color: Theme.indigo))
-                } else {
-                    Button(action: onHome) {
-                        Text("Done")
-                            .font(.system(.title3, design: .rounded).weight(.bold))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                    }
-                    .buttonStyle(ChunkyButtonStyle(color: Theme.indigo))
+            if won {
+                Button(action: onNext) {
+                    Text("Next level")
+                        .font(.system(.title3, design: .rounded).weight(.bold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
                 }
+                .buttonStyle(ChunkyButtonStyle(color: Theme.indigo))
             } else {
                 Button(action: onRetry) {
                     Text("Try again")
@@ -195,21 +218,10 @@ struct ResultCard: View {
                 .font(.system(.headline, design: .rounded))
                 .foregroundStyle(Theme.secondaryInk)
         }
-        .padding(28)
-        .frame(maxWidth: 340)
-        .background(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(Theme.background)
-                .shadow(color: .black.opacity(0.2), radius: 24, y: 10)
-        )
-        .padding(24)
     }
 
     private var message: String {
-        switch (phase, mode) {
-        case (.won, .daily): return "You solved today's puzzle. Come back tomorrow for a new one."
-        case (.won, _): return "Nice work. The next board is a little bigger."
-        default: return "A blocked arrow costs a heart. Look for arrows with a clear path first."
-        }
+        if won { return "Nice work. The next board is a little bigger." }
+        return "A blocked arrow costs a heart. Look for arrows with a clear path first."
     }
 }

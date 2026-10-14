@@ -21,6 +21,9 @@ A grid is filled with arrows. Tap an arrow and it slides off the board in the di
 - Levels get bigger and denser as you go: 4x4 boards at the start, up to 8x10 boards later. Levels are endless.
 - **Daily Puzzle:** one bigger board per day, the same for every player.
 - **Hints:** 3 per level; a hint highlights an arrow that can escape right now.
+- **Level map:** levels are grouped in chapters of 8 on a map; cleared levels can be replayed.
+- **Daily streak:** the home screen shows the last 7 Daily Puzzles, and solving one shows the streak with a Share button.
+- **Win card:** hearts left, hints used and time, with arrow confetti. A progress bar in the game header fills as arrows leave.
 - Haptic feedback on every move.
 
 ## Short pitch

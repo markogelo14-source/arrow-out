@@ -4,6 +4,9 @@ struct HomeView: View {
     @Binding var path: [GameMode]
     @Environment(PlayerProgress.self) private var progress
     @State private var showSettings = false
+    @State private var showMap = false
+    /// A level picked on the map, opened once the map sheet has closed.
+    @State private var pickedLevel: Int?
 
     var body: some View {
         ZStack {
@@ -11,6 +14,15 @@ struct HomeView: View {
 
             VStack(spacing: 28) {
                 HStack {
+                    Button {
+                        showMap = true
+                    } label: {
+                        Image(systemName: "map.fill")
+                            .font(.title2)
+                            .foregroundStyle(Theme.secondaryInk)
+                            .frame(width: 44, height: 44)
+                    }
+                    .accessibilityLabel("Levels")
                     Spacer()
                     Button {
                         showSettings = true
@@ -26,7 +38,7 @@ struct HomeView: View {
                 Spacer()
 
                 LogoView()
-                    .frame(width: 150, height: 150)
+                    .frame(width: 130, height: 130)
 
                 VStack(spacing: 6) {
                     Text("Arrowly")
@@ -55,18 +67,9 @@ struct HomeView: View {
                     }
                     .buttonStyle(ChunkyButtonStyle(color: Theme.indigo))
 
-                    Button {
+                    DailyCard {
                         path.append(.daily(DayKey.today))
-                    } label: {
-                        HStack(spacing: 10) {
-                            Image(systemName: progress.dailySolvedToday ? "checkmark.seal.fill" : "calendar")
-                            Text(progress.dailySolvedToday ? "Daily Puzzle solved" : "Daily Puzzle")
-                        }
-                        .font(.system(.title3, design: .rounded).weight(.bold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
                     }
-                    .buttonStyle(ChunkyButtonStyle(color: Theme.coral))
 
                     Text(streakText)
                         .font(.system(.footnote, design: .rounded))
@@ -81,6 +84,17 @@ struct HomeView: View {
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+        .sheet(isPresented: $showMap, onDismiss: {
+            if let level = pickedLevel {
+                pickedLevel = nil
+                path.append(.level(level))
+            }
+        }) {
+            LevelMapView { level in
+                pickedLevel = level
+                showMap = false
+            }
         }
     }
 
