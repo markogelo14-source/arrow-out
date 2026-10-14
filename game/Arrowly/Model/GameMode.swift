@@ -47,4 +47,16 @@ enum DayKey {
     static var yesterday: String {
         key(for: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date())
     }
+
+    /// The key `days` days before the day `key` names, or nil if `key` is not a valid day.
+    static func key(_ days: Int, daysBefore key: String) -> String? {
+        guard let date = date(from: key),
+              let earlier = Calendar.current.date(byAdding: .day, value: -days, to: date) else { return nil }
+        return self.key(for: earlier)
+    }
+
+    /// The last `count` days ending today, oldest first.
+    static func recentDays(_ count: Int) -> [String] {
+        (0..<count).reversed().compactMap { key($0, daysBefore: today) }
+    }
 }

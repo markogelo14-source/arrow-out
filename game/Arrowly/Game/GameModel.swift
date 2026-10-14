@@ -19,6 +19,11 @@ final class GameModel {
     private(set) var hintsLeft = GameModel.maxHints
     private(set) var hintedID: Int?
     private(set) var flashingID: Int?
+    /// Arrows on the board when it was dealt, for the progress bar.
+    private(set) var totalPieces = 0
+    /// Seconds from the deal to the last arrow leaving, set when the board is won.
+    private(set) var finishTime: TimeInterval = 0
+    private var startedAt = Date()
 
     /// Pieces that already left the board logically but are still flying off screen.
     private(set) var leaving: [Piece] = []
@@ -32,12 +37,20 @@ final class GameModel {
     init(mode: GameMode) {
         self.mode = mode
         board = LevelGenerator.generate(mode.spec)
+        totalPieces = board.pieces.count
     }
 
     /// Everything to draw: pieces on the board plus pieces flying away.
     var visiblePieces: [Piece] { board.pieces + leaving }
 
     var piecesLeft: Int { board.pieces.count }
+
+    /// Share of the board cleared, 0...1.
+    var progress: Double {
+        totalPieces == 0 ? 1 : Double(totalPieces - piecesLeft) / Double(totalPieces)
+    }
+
+    var hintsUsed: Int { Self.maxHints - hintsLeft }
 
     func isLeaving(_ id: Int) -> Bool {
         leaving.contains { $0.id == id }
@@ -51,6 +64,9 @@ final class GameModel {
     func restart() {
         generation += 1
         board = LevelGenerator.generate(mode.spec)
+        totalPieces = board.pieces.count
+        startedAt = Date()
+        finishTime = 0
         phase = .playing
         hearts = Self.maxHearts
         hintsLeft = Self.maxHints
@@ -95,6 +111,7 @@ final class GameModel {
         }
 
         let cleared = board.isCleared
+        if cleared { finishTime = Date().timeIntervalSince(startedAt) }
         Task {
             try? await Task.sleep(for: .milliseconds(340))
             guard token == generation else { return }

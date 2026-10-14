@@ -22,6 +22,11 @@ final class PlayerProgress {
         didSet { defaults.set(dailyStreak, forKey: Keys.dailyStreak) }
     }
 
+    /// Day keys of every Daily Puzzle solved, for the week row and streak screen.
+    var dailySolvedDays: Set<String> {
+        didSet { defaults.set(dailySolvedDays.sorted(), forKey: Keys.dailySolvedDays) }
+    }
+
     var hapticsEnabled: Bool {
         didSet { defaults.set(hapticsEnabled, forKey: Haptics.enabledKey) }
     }
@@ -35,6 +40,14 @@ final class PlayerProgress {
         currentLevel = max(defaults.integer(forKey: Keys.currentLevel), 1)
         dailyLastCompleted = defaults.string(forKey: Keys.dailyLastCompleted) ?? ""
         dailyStreak = defaults.integer(forKey: Keys.dailyStreak)
+        if let saved = defaults.stringArray(forKey: Keys.dailySolvedDays) {
+            dailySolvedDays = Set(saved)
+        } else {
+            // Older installs only stored the last solve and the streak, so rebuild the run of days it implies.
+            let last = defaults.string(forKey: Keys.dailyLastCompleted) ?? ""
+            let streak = max(defaults.integer(forKey: Keys.dailyStreak), 1)
+            dailySolvedDays = last.isEmpty ? [] : Set((0..<streak).compactMap { DayKey.key($0, daysBefore: last) })
+        }
         hapticsEnabled = defaults.object(forKey: Haptics.enabledKey) as? Bool ?? true
         hasSeenTutorial = defaults.bool(forKey: Keys.hasSeenTutorial)
     }
@@ -54,6 +67,7 @@ final class PlayerProgress {
             guard key == DayKey.today, dailyLastCompleted != key else { return }
             dailyStreak = dailyLastCompleted == DayKey.yesterday ? dailyStreak + 1 : 1
             dailyLastCompleted = key
+            dailySolvedDays.insert(key)
         }
     }
 
@@ -61,6 +75,7 @@ final class PlayerProgress {
         currentLevel = 1
         dailyLastCompleted = ""
         dailyStreak = 0
+        dailySolvedDays = []
         hasSeenTutorial = false
     }
 
@@ -68,6 +83,7 @@ final class PlayerProgress {
         static let currentLevel = "currentLevel"
         static let dailyLastCompleted = "dailyLastCompleted"
         static let dailyStreak = "dailyStreak"
+        static let dailySolvedDays = "dailySolvedDays"
         static let hasSeenTutorial = "hasSeenTutorial"
     }
 }
