@@ -22,6 +22,20 @@ final class GeneratorTests: XCTestCase {
         }
     }
 
+    func testBoardsGrowOncePerChapter() {
+        for chapter in 0..<10 {
+            let first = LevelGenerator.spec(forLevel: chapter * 8 + 1)
+            let last = LevelGenerator.spec(forLevel: chapter * 8 + 8)
+            XCTAssertEqual(first.columns, last.columns, "chapter \(chapter + 1) changes width")
+            XCTAssertEqual(first.rows, last.rows, "chapter \(chapter + 1) changes height")
+        }
+        let largest = LevelGenerator.spec(forLevel: 81)
+        XCTAssertEqual([largest.columns, largest.rows], [8, 10])
+        XCTAssertLessThan(LevelGenerator.spec(forLevel: 80).columns * LevelGenerator.spec(forLevel: 80).rows, 80)
+        XCTAssertEqual(LevelGenerator.spec(forLevel: 16).maxLength, 2)
+        XCTAssertEqual(LevelGenerator.spec(forLevel: 17).maxLength, 3)
+    }
+
     func testGenerationIsDeterministic() {
         let a = LevelGenerator.generate(LevelGenerator.spec(forLevel: 42))
         let b = LevelGenerator.generate(LevelGenerator.spec(forLevel: 42))
@@ -59,7 +73,7 @@ final class GeneratorTests: XCTestCase {
 
     /// Prints how puzzle-like the curve is: how many arrows are free at the start.
     func testPrintDifficultyCurve() {
-        for level in [1, 4, 8, 12, 20, 30, 41, 60, 100] {
+        for level in [1, 8, 9, 17, 25, 41, 60, 81, 100] {
             let spec = LevelGenerator.spec(forLevel: level)
             let board = LevelGenerator.generate(spec)
             let free = board.escapablePieces().count

@@ -20,13 +20,17 @@ enum LevelGenerator {
         (6, 8), (7, 8), (7, 9), (8, 9), (8, 10),
     ]
 
-    /// Difficulty curve for the endless level list. Boards grow every 4 levels.
+    /// Levels per chapter on the level map. The board grows once per chapter.
+    static let levelsPerChapter = 8
+
+    /// Difficulty curve for the endless level list. Boards grow at the start of each chapter,
+    /// reaching the largest size in chapter 11 (level 81). 3-cell arrows arrive in chapter 3.
     static func spec(forLevel level: Int) -> LevelSpec {
         let n = max(level, 1)
-        let tier = min((n - 1) / 4, sizes.count - 1)
+        let tier = min((n - 1) / levelsPerChapter, sizes.count - 1)
         let (columns, rows) = sizes[tier]
         let fill = min(0.62 + 0.025 * Double(tier), 0.88)
-        let maxLength = n < 4 ? 1 : (n < 12 ? 2 : 3)
+        let maxLength = n < 4 ? 1 : (n <= 2 * levelsPerChapter ? 2 : 3)
         return LevelSpec(
             columns: columns, rows: rows, targetFill: fill, maxLength: maxLength,
             seed: UInt64(n) &* 0x2545_F491_4F6C_DD1D &+ 0x1234_5678

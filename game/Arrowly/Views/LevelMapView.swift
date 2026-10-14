@@ -7,7 +7,7 @@ struct LevelMapView: View {
     @Environment(PlayerProgress.self) private var progress
     @Environment(\.dismiss) private var dismiss
 
-    static let levelsPerChapter = 8
+    static let levelsPerChapter = LevelGenerator.levelsPerChapter
     /// Sideways offsets that make each chapter's tiles wind down the screen.
     private let swing: [CGFloat] = [0, 56, 84, 56, 0, -56, -84, -56]
 

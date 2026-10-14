@@ -221,7 +221,12 @@ struct ResultCard: View {
     }
 
     private var message: String {
-        if won { return "Nice work. The next board is a little bigger." }
+        if won {
+            if case .level(let number) = model.mode, number % LevelGenerator.levelsPerChapter == 0 {
+                return "Chapter complete! The next chapter has a bigger board."
+            }
+            return "Nice work. On to the next one."
+        }
         return "A blocked arrow costs a heart. Look for arrows with a clear path first."
     }
 }
